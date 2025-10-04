@@ -22,13 +22,21 @@ export default defineConfig({
   },
   worker: {
     format: 'es',
+    rollupOptions: {
+      output: {
+        format: 'es'
+      }
+    }
   },
   optimizeDeps: {
     exclude: [
       '@jsquash/avif',
       '@jsquash/jpeg',
       '@jsquash/png',
-      '@jsquash/webp'
+      '@jsquash/webp',
+      'gifsicle-wasm-browser',
+      '@ffmpeg/ffmpeg',
+      '@ffmpeg/util'
     ],
   },
   build: {
@@ -39,6 +47,8 @@ export default defineConfig({
     cssCodeSplit: true,
     // Generate sourcemaps for production debugging
     sourcemap: false,
+    // Suppress WASM source map warnings
+    assetsInlineLimit: 0,
     // Chunk size warnings
     chunkSizeWarningLimit: 500,
     rollupOptions: {
