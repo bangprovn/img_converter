@@ -44,30 +44,31 @@ export function ImageConverterDemo() {
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full space-y-4 sm:space-y-6">
       {/* Header with Quick Actions */}
-      <div className="flex items-start justify-between gap-4 flex-wrap">
+      <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
         <div className="flex-1 min-w-0">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
             Image Converter
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-sm sm:text-base text-muted-foreground mt-1">
             Convert and optimize your images with advanced compression
           </p>
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap w-full sm:w-auto">
           <Button
             onClick={() => setShowAdvancedSettings(!showAdvancedSettings)}
             variant="outline"
             size="sm"
-            className="border-indigo-200 dark:border-indigo-800 hover:bg-indigo-50 dark:hover:bg-indigo-950"
+            className="border-indigo-200 dark:border-indigo-800 hover:bg-indigo-50 dark:hover:bg-indigo-950 flex-1 sm:flex-none"
           >
             {showAdvancedSettings ? (
-              <ChevronUp className="h-4 w-4 mr-2" />
+              <ChevronUp className="h-4 w-4 sm:mr-2" />
             ) : (
-              <ChevronDown className="h-4 w-4 mr-2" />
+              <ChevronDown className="h-4 w-4 sm:mr-2" />
             )}
-            Advanced Settings
+            <span className="hidden sm:inline">Advanced Settings</span>
+            <span className="sm:hidden">Advanced</span>
           </Button>
           <Button
             onClick={resetSettings}
@@ -75,8 +76,8 @@ export function ImageConverterDemo() {
             size="sm"
             className="border-purple-200 dark:border-purple-800 hover:bg-purple-50 dark:hover:bg-purple-950"
           >
-            <RotateCcw className="h-4 w-4 mr-2" />
-            Reset
+            <RotateCcw className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Reset</span>
           </Button>
           <Button
             onClick={exportSettings}
@@ -84,8 +85,8 @@ export function ImageConverterDemo() {
             size="sm"
             className="border-pink-200 dark:border-pink-800 hover:bg-pink-50 dark:hover:bg-pink-950"
           >
-            <Download className="h-4 w-4 mr-2" />
-            Export
+            <Download className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Export</span>
           </Button>
           <Button
             variant="outline"
@@ -94,8 +95,8 @@ export function ImageConverterDemo() {
             className="border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-950"
           >
             <label className="cursor-pointer">
-              <Upload className="h-4 w-4 mr-2" />
-              Import
+              <Upload className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Import</span>
               <input
                 type="file"
                 accept=".json"
@@ -109,7 +110,7 @@ export function ImageConverterDemo() {
 
       {/* Advanced Settings Panel (Collapsible) */}
       {showAdvancedSettings && (
-        <Card className="p-6 border-indigo-100 dark:border-indigo-900 bg-gradient-to-br from-indigo-50/50 via-purple-50/30 to-pink-50/50 dark:from-indigo-950/20 dark:via-purple-950/10 dark:to-pink-950/20">
+        <Card className="p-4 sm:p-6 border-indigo-100 dark:border-indigo-900 bg-gradient-to-br from-indigo-50/50 via-purple-50/30 to-pink-50/50 dark:from-indigo-950/20 dark:via-purple-950/10 dark:to-pink-950/20">
           <ConversionOptions
             targetFormat={targetFormat}
             onFormatChange={setTargetFormat}
@@ -122,7 +123,7 @@ export function ImageConverterDemo() {
       )}
 
       {/* Main Batch Processing Area */}
-      <div className="rounded-lg border border-purple-100 dark:border-purple-900 bg-gradient-to-br from-blue-50/30 via-indigo-50/20 to-purple-50/30 dark:from-blue-950/10 dark:via-indigo-950/5 dark:to-purple-950/10 p-6">
+      <div className="rounded-lg border border-purple-100 dark:border-purple-900 bg-gradient-to-br from-blue-50/30 via-indigo-50/20 to-purple-50/30 dark:from-blue-950/10 dark:via-indigo-950/5 dark:to-purple-950/10 p-4 sm:p-6">
         <BatchProcessing targetFormat={targetFormat} options={conversionOptions} />
       </div>
     </div>

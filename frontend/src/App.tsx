@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
-import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { BrowserCompatWarning } from '@/components/BrowserCompatWarning';
 import { ImageConverter } from '@/pages/ImageConverter';
@@ -9,7 +8,7 @@ import { VideoConverter } from '@/pages/VideoConverter';
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="image-converter-theme">
+    <>
       <BrowserCompatWarning />
       <BrowserRouter>
         <Layout>
@@ -21,7 +20,7 @@ function App() {
         </Layout>
       </BrowserRouter>
       <Toaster />
-    </ThemeProvider>
+    </>
   );
 }
 
