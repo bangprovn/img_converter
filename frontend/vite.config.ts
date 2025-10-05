@@ -36,11 +36,12 @@ export default defineConfig({
       '@jsquash/webp',
       'gifsicle-wasm-browser',
       '@ffmpeg/ffmpeg',
-      '@ffmpeg/util'
+      '@ffmpeg/util',
+      '@huggingface/transformers'
     ],
   },
   build: {
-    target: 'esnext',
+    target: 'es2020',
     // Optimize bundle size
     minify: 'esbuild',
     // Enable CSS code splitting
@@ -50,7 +51,7 @@ export default defineConfig({
     // Suppress WASM source map warnings
     assetsInlineLimit: 0,
     // Chunk size warnings
-    chunkSizeWarningLimit: 500,
+    chunkSizeWarningLimit: 2000,
     rollupOptions: {
       output: {
         // Manual chunking for better caching
@@ -79,6 +80,7 @@ export default defineConfig({
           // Image processing vendors (lazy loaded separately)
           'jszip-vendor': ['jszip'],
           'dropzone-vendor': ['react-dropzone'],
+          'transformers': ['@huggingface/transformers'],
         },
         // Optimize asset file names for caching
         assetFileNames: (assetInfo) => {

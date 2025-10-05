@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { ImageIcon, Film, Video } from 'lucide-react';
+import { ImageIcon, Film, Video, ImageOff } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { cn } from '@/lib/utils';
 
@@ -62,6 +62,19 @@ export function Header() {
               <span className="hidden lg:inline">Video Tools</span>
               <span className="lg:hidden">Video</span>
             </Link>
+            <Link
+              to="/background-removal"
+              className={cn(
+                "px-3 lg:px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
+                location.pathname === "/background-removal"
+                  ? "bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-950 dark:to-purple-950 text-indigo-900 dark:text-indigo-100"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              )}
+            >
+              <ImageOff className="h-4 w-4 inline mr-1.5" />
+              <span className="hidden lg:inline">Background Removal</span>
+              <span className="lg:hidden">BG Remove</span>
+            </Link>
           </nav>
         </div>
 
@@ -103,6 +116,18 @@ export function Header() {
               title="Video Tools"
             >
               <Video className="h-5 w-5" />
+            </Link>
+            <Link
+              to="/background-removal"
+              className={cn(
+                "p-2 rounded-md transition-colors",
+                location.pathname === "/background-removal"
+                  ? "bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-950 dark:to-purple-950 text-indigo-900 dark:text-indigo-100"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              )}
+              title="Background Removal"
+            >
+              <ImageOff className="h-5 w-5" />
             </Link>
           </nav>
           <ThemeToggle />

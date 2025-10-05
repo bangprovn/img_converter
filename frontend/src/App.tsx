@@ -5,6 +5,7 @@ import { BrowserCompatWarning } from '@/components/BrowserCompatWarning';
 import { ImageConverter } from '@/pages/ImageConverter';
 import { GIFConverter } from '@/pages/GIFConverter';
 import { VideoConverter } from '@/pages/VideoConverter';
+import { BackgroundRemoval } from '@/pages/BackgroundRemoval';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<ImageConverter />} />
             <Route path="/gif" element={<GIFConverter />} />
             <Route path="/video" element={<VideoConverter />} />
+            <Route path="/background-removal" element={<BackgroundRemoval />} />
           </Routes>
         </Layout>
       </BrowserRouter>
