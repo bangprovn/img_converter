@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { ImageIcon, Film } from 'lucide-react';
+import { ImageIcon, Film, Video } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { cn } from '@/lib/utils';
 
@@ -46,6 +46,18 @@ export function Header() {
             >
               <Film className="h-4 w-4 inline mr-2" />
               GIF Tools
+            </Link>
+            <Link
+              to="/video"
+              className={cn(
+                "px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                location.pathname === "/video"
+                  ? "bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 text-blue-900 dark:text-blue-100"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              )}
+            >
+              <Video className="h-4 w-4 inline mr-2" />
+              Video Tools
             </Link>
           </nav>
         </div>

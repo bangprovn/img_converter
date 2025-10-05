@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { BrowserCompatWarning } from '@/components/BrowserCompatWarning';
 import { ImageConverter } from '@/pages/ImageConverter';
 import { GIFConverter } from '@/pages/GIFConverter';
+import { VideoConverter } from '@/pages/VideoConverter';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Routes>
             <Route path="/" element={<ImageConverter />} />
             <Route path="/gif" element={<GIFConverter />} />
+            <Route path="/video" element={<VideoConverter />} />
           </Routes>
         </Layout>
       </BrowserRouter>
