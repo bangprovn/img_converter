@@ -83,11 +83,13 @@ export interface EncodingOptions {
 }
 
 export interface WorkerResponse {
-  type: 'success' | 'error';
+  type: 'success' | 'error' | 'progress';
   id: string;
   data?: ArrayBuffer;
   error?: string;
   dimensions?: { width: number; height: number };
+  progress?: number;
+  stage?: string;
 }
 
 /**
@@ -190,10 +192,24 @@ async function encodeImage(
         avifOptions.quality = options.quality ?? 75;
       }
 
-      // Add speed (effort) level if specified
-      if (options.speed !== undefined) {
-        avifOptions.speed = options.speed;
+      // Automatically adjust speed for large images to prevent hanging
+      // Calculate pixel count to determine image size
+      const pixelCount = imageData.width * imageData.height;
+      let speed = options.speed ?? 4;
+
+      // For large images (>2MP), use faster speed settings
+      if (pixelCount > 2000000 && speed < 6) {
+        speed = 6; // Use faster encoding for large images
+        console.log(`Large image detected (${pixelCount} pixels), using speed ${speed} for AVIF encoding`);
       }
+
+      // For very large images (>5MP), use even faster speed
+      if (pixelCount > 5000000 && speed < 7) {
+        speed = 7;
+        console.log(`Very large image detected (${pixelCount} pixels), using speed ${speed} for AVIF encoding`);
+      }
+
+      avifOptions.speed = speed;
 
       return await codec.encode(imageData, avifOptions);
     }
@@ -204,19 +220,41 @@ async function encodeImage(
 }
 
 /**
+ * Send progress update
+ */
+function sendProgress(id: string, progress: number, stage: string) {
+  const response: WorkerResponse = {
+    type: 'progress',
+    id,
+    progress,
+    stage,
+  };
+  self.postMessage(response);
+}
+
+/**
  * Convert image from one format to another
  */
 async function convertImage(
   buffer: ArrayBuffer,
   sourceFormat: ImageFormat,
   targetFormat: ImageFormat,
-  options: EncodingOptions = {}
+  options: EncodingOptions = {},
+  id?: string
 ): Promise<{ buffer: ArrayBuffer; dimensions: { width: number; height: number } }> {
+  // Send initial progress
+  if (id) sendProgress(id, 10, 'Loading codec');
+
   // Decode source image
+  if (id) sendProgress(id, 30, 'Decoding image');
   const imageData = await decodeImage(buffer, sourceFormat);
 
   // Encode to target format
+  if (id) sendProgress(id, 50, `Encoding to ${targetFormat.toUpperCase()}`);
   const encodedBuffer = await encodeImage(imageData, targetFormat, options);
+
+  // Complete
+  if (id) sendProgress(id, 90, 'Finalizing');
 
   return {
     buffer: encodedBuffer,
@@ -275,7 +313,7 @@ self.addEventListener('message', async (event: MessageEvent<WorkerMessage>) => {
         if (!targetFormat) {
           throw new Error('Target format is required for conversion');
         }
-        const result = await convertImage(data, sourceFormat, targetFormat, options);
+        const result = await convertImage(data, sourceFormat, targetFormat, options, id);
 
         const response: WorkerResponse = {
           type: 'success',

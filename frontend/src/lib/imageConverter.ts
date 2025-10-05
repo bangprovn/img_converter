@@ -5,6 +5,8 @@
 
 export type ImageFormat = 'jpeg' | 'png' | 'webp' | 'avif';
 
+export type ResizePreset = 'original' | 'custom' | '3840x2160' | '2560x1440' | '1920x1080' | '1280x720' | '800x600' | '640x480';
+
 export interface ImageDimensions {
   width: number;
   height: number;
@@ -15,6 +17,30 @@ export interface ImageInfo {
   dimensions: ImageDimensions;
   buffer: ArrayBuffer;
 }
+
+export interface ResizeOptions {
+  width: number;
+  height: number;
+  maintainAspectRatio: boolean;
+  dpi?: number; // DPI for output image (default: 72)
+}
+
+export interface ResizePresetConfig {
+  label: string;
+  width: number;
+  height: number;
+}
+
+export const RESIZE_PRESETS: Record<ResizePreset, ResizePresetConfig> = {
+  original: { label: 'Original Size', width: 0, height: 0 },
+  custom: { label: 'Custom', width: 0, height: 0 },
+  '3840x2160': { label: '3840x2160 (4K UHD)', width: 3840, height: 2160 },
+  '2560x1440': { label: '2560x1440 (QHD)', width: 2560, height: 1440 },
+  '1920x1080': { label: '1920x1080 (Full HD)', width: 1920, height: 1080 },
+  '1280x720': { label: '1280x720 (HD)', width: 1280, height: 720 },
+  '800x600': { label: '800x600 (SVGA)', width: 800, height: 600 },
+  '640x480': { label: '640x480 (VGA)', width: 640, height: 480 },
+};
 
 /**
  * Convert File to ArrayBuffer
@@ -228,4 +254,140 @@ export function getFileExtension(format: ImageFormat): string {
     avif: 'avif',
   };
   return extensions[format];
+}
+
+/**
+ * Calculate new dimensions based on aspect ratio
+ */
+export function calculateAspectRatioDimensions(
+  originalWidth: number,
+  originalHeight: number,
+  targetWidth: number,
+  targetHeight: number,
+  maintainAspectRatio: boolean
+): ImageDimensions {
+  if (!maintainAspectRatio) {
+    return { width: targetWidth, height: targetHeight };
+  }
+
+  const aspectRatio = originalWidth / originalHeight;
+
+  // If only width is changed, calculate height
+  if (targetWidth !== originalWidth && targetHeight === originalHeight) {
+    return {
+      width: targetWidth,
+      height: Math.round(targetWidth / aspectRatio)
+    };
+  }
+
+  // If only height is changed, calculate width
+  if (targetHeight !== originalHeight && targetWidth === originalWidth) {
+    return {
+      width: Math.round(targetHeight * aspectRatio),
+      height: targetHeight
+    };
+  }
+
+  // If both changed, maintain aspect ratio based on width
+  return {
+    width: targetWidth,
+    height: Math.round(targetWidth / aspectRatio)
+  };
+}
+
+/**
+ * Resize image using canvas
+ */
+export async function resizeImage(
+  file: File,
+  options: ResizeOptions
+): Promise<{ blob: Blob; dimensions: ImageDimensions }> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+
+      try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        if (!ctx) {
+          reject(new Error('Failed to get canvas context'));
+          return;
+        }
+
+        // Calculate final dimensions
+        let finalWidth = options.width;
+        let finalHeight = options.height;
+
+        if (options.maintainAspectRatio) {
+          const aspectRatio = img.naturalWidth / img.naturalHeight;
+          finalHeight = Math.round(finalWidth / aspectRatio);
+        }
+
+        canvas.width = finalWidth;
+        canvas.height = finalHeight;
+
+        // Set DPI metadata if provided (for PNG format)
+        if (options.dpi) {
+          // DPI is set through canvas rendering but needs to be embedded in the image metadata
+          // This is handled differently per format and may require additional libraries
+          // For now, we'll add it as a note that it can be enhanced
+        }
+
+        // Use high-quality image rendering
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+
+        // Draw the resized image
+        ctx.drawImage(img, 0, 0, finalWidth, finalHeight);
+
+        // Convert canvas to blob
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              resolve({
+                blob,
+                dimensions: { width: finalWidth, height: finalHeight }
+              });
+            } else {
+              reject(new Error('Failed to create blob from canvas'));
+            }
+          },
+          file.type,
+          0.95 // Quality for JPEG/WebP
+        );
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('Failed to load image for resizing'));
+    };
+
+    img.src = url;
+  });
+}
+
+/**
+ * Apply resize preset to get dimensions
+ */
+export function applyResizePreset(
+  preset: ResizePreset,
+  originalDimensions: ImageDimensions
+): ImageDimensions {
+  if (preset === 'original') {
+    return originalDimensions;
+  }
+
+  if (preset === 'custom') {
+    return originalDimensions; // Return original, let user customize
+  }
+
+  const config = RESIZE_PRESETS[preset];
+  return { width: config.width, height: config.height };
 }

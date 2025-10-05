@@ -89,6 +89,10 @@ export function BatchProcessing({ targetFormat, options = {} }: BatchProcessingP
     manager.cancelItem(id);
   };
 
+  const handleResizeConfigChange = (id: string, config: any) => {
+    manager.updateItemResizeConfig(id, config);
+  };
+
   const itemsArray = useMemo(() => Array.from(state.items.values()), [state.items]);
   const completedResults = useMemo(
     () => itemsArray.filter((item) => item.result).map((item) => item.result!),
@@ -191,6 +195,7 @@ export function BatchProcessing({ targetFormat, options = {} }: BatchProcessingP
                 onDownload={handleDownload}
                 onRetry={handleRetry}
                 onCancel={handleCancel}
+                onResizeConfigChange={handleResizeConfigChange}
                 targetFormat={targetFormat}
                 options={options}
               />

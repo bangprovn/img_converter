@@ -4,8 +4,17 @@
  */
 
 import type { ConversionResult } from '@/lib/imageProcessing';
+import type { ResizePreset } from '@/lib/imageConverter';
 
 export type ImageStatus = 'queued' | 'processing' | 'complete' | 'error';
+
+export interface ImageResizeConfig {
+  preset: ResizePreset;
+  width: number;
+  height: number;
+  maintainAspectRatio: boolean;
+  dpi?: number;
+}
 
 export interface ImageProcessingItem {
   id: string;
@@ -17,6 +26,8 @@ export interface ImageProcessingItem {
   startTime?: number;
   endTime?: number;
   processingTime?: number;
+  resizeConfig?: ImageResizeConfig;
+  originalDimensions?: { width: number; height: number };
 }
 
 export interface BatchProcessingState {

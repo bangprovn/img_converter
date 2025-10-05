@@ -58,7 +58,8 @@ export interface ConversionProgress {
 export async function convertImage(
   file: File,
   targetFormat: ImageFormat,
-  options: ConversionOptions = {}
+  options: ConversionOptions = {},
+  onProgress?: (progress: number, stage: string) => void
 ): Promise<ConversionResult> {
   // Convert file to ArrayBuffer
   const buffer = await fileToArrayBuffer(file);
@@ -77,7 +78,8 @@ export async function convertImage(
     buffer,
     sourceFormat,
     targetFormat,
-    options
+    options,
+    onProgress
   );
 
   if (response.type === 'error') {

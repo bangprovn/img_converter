@@ -10,6 +10,7 @@ export interface WorkerTask {
   message: WorkerMessage;
   resolve: (response: WorkerResponse) => void;
   reject: (error: Error) => void;
+  onProgress?: (progress: number, stage: string) => void;
 }
 
 export class WorkerPool {
@@ -71,6 +72,14 @@ export class WorkerPool {
       return;
     }
 
+    // Handle progress updates
+    if (response.type === 'progress') {
+      if (task.onProgress && response.progress !== undefined && response.stage) {
+        task.onProgress(response.progress, response.stage);
+      }
+      return; // Don't complete the task yet
+    }
+
     this.pendingTasks.delete(response.id);
 
     if (response.type === 'error') {
@@ -108,7 +117,10 @@ export class WorkerPool {
   /**
    * Execute a task using the worker pool
    */
-  async execute(message: Omit<WorkerMessage, 'id'>): Promise<WorkerResponse> {
+  async execute(
+    message: Omit<WorkerMessage, 'id'>,
+    onProgress?: (progress: number, stage: string) => void
+  ): Promise<WorkerResponse> {
     return new Promise((resolve, reject) => {
       const id = crypto.randomUUID();
       const task: WorkerTask = {
@@ -116,6 +128,7 @@ export class WorkerPool {
         message: { ...message, id } as WorkerMessage,
         resolve,
         reject,
+        onProgress,
       };
 
       this.taskQueue.push(task);
@@ -130,7 +143,8 @@ export class WorkerPool {
     buffer: ArrayBuffer,
     sourceFormat: 'jpeg' | 'png' | 'webp' | 'avif',
     targetFormat: 'jpeg' | 'png' | 'webp' | 'avif',
-    options?: { quality?: number; lossless?: boolean }
+    options?: { quality?: number; lossless?: boolean },
+    onProgress?: (progress: number, stage: string) => void
   ): Promise<WorkerResponse> {
     return this.execute({
       type: 'convert',
@@ -138,7 +152,7 @@ export class WorkerPool {
       sourceFormat,
       targetFormat,
       options,
-    });
+    }, onProgress);
   }
 
   /**

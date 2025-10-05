@@ -8,8 +8,10 @@ import type {
   ImageProcessingItem,
   BatchProcessingState,
   BatchStatistics,
+  ImageResizeConfig,
 } from '@/types/batchProcessing';
 import type { ImageFormat } from './imageConverter';
+import { getImageDimensions, resizeImage } from './imageConverter';
 
 export class BatchProcessingManager {
   private items = new Map<string, ImageProcessingItem>();
@@ -59,8 +61,10 @@ export class BatchProcessingManager {
   addFiles(files: File[]): string[] {
     const ids: string[] = [];
 
+    // Add files synchronously first, then load dimensions asynchronously
     files.forEach((file) => {
       const id = crypto.randomUUID();
+
       const item: ImageProcessingItem = {
         id,
         file,
@@ -70,6 +74,24 @@ export class BatchProcessingManager {
 
       this.items.set(id, item);
       ids.push(id);
+
+      // Load dimensions asynchronously and update item
+      getImageDimensions(file)
+        .then((originalDimensions) => {
+          this.updateItem(id, {
+            originalDimensions,
+            resizeConfig: {
+              preset: 'original',
+              width: originalDimensions.width,
+              height: originalDimensions.height,
+              maintainAspectRatio: true,
+              dpi: 72,
+            },
+          });
+        })
+        .catch((error) => {
+          console.error('Failed to get dimensions for', file.name, error);
+        });
     });
 
     this.notifyListeners();
@@ -107,7 +129,44 @@ export class BatchProcessingManager {
         startTime,
       });
 
-      const result = await convertImage(item.file, targetFormat, options);
+      // Progress callback to update item progress
+      const onProgress = (progress: number, stage: string) => {
+        this.updateItem(id, {
+          progress,
+        });
+      };
+
+      // Determine which file to process
+      let fileToProcess = item.file;
+
+      // Apply resize if configured and not set to original
+      if (item.resizeConfig && item.resizeConfig.preset !== 'original' && item.originalDimensions) {
+        const shouldResize =
+          item.resizeConfig.width !== item.originalDimensions.width ||
+          item.resizeConfig.height !== item.originalDimensions.height;
+
+        if (shouldResize) {
+          onProgress(10, 'Resizing image');
+
+          const resized = await resizeImage(item.file, {
+            width: item.resizeConfig.width,
+            height: item.resizeConfig.height,
+            maintainAspectRatio: item.resizeConfig.maintainAspectRatio,
+            dpi: item.resizeConfig.dpi,
+          });
+
+          // Create a new File from the resized blob
+          fileToProcess = new File(
+            [resized.blob],
+            item.file.name,
+            { type: item.file.type }
+          );
+
+          onProgress(20, 'Resize complete, starting conversion');
+        }
+      }
+
+      const result = await convertImage(fileToProcess, targetFormat, options, onProgress);
 
       const endTime = Date.now();
       const processingTime = endTime - startTime;
@@ -264,6 +323,16 @@ export class BatchProcessingManager {
     );
     this.items = new Map(itemsToKeep);
     this.notifyListeners();
+  }
+
+  /**
+   * Update resize configuration for an item
+   */
+  updateItemResizeConfig(id: string, config: ImageResizeConfig) {
+    const item = this.items.get(id);
+    if (item && (item.status === 'queued' || item.status === 'processing')) {
+      this.updateItem(id, { resizeConfig: config });
+    }
   }
 }
 
