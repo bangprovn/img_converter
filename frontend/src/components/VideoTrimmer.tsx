@@ -23,7 +23,6 @@ export function VideoTrimmer() {
   const [progress, setProgress] = useState(0);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [logs, setLogs] = useState<string[]>([]);
-  const [dragging, setDragging] = useState<'start' | 'end' | null>(null);
 
   const ffmpegRef = useRef(new FFmpeg());
   const { toast } = useToast();
@@ -291,7 +290,6 @@ export function VideoTrimmer() {
 
   const handleHandleMouseDown = (type: 'start' | 'end') => (e: React.MouseEvent) => {
     e.stopPropagation();
-    setDragging(type);
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       if (!timelineRef.current || !duration) return;
@@ -313,7 +311,6 @@ export function VideoTrimmer() {
     };
 
     const handleMouseUp = () => {
-      setDragging(null);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };

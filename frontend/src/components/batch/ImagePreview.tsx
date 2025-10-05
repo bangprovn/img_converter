@@ -4,7 +4,7 @@
  */
 
 import { memo, useState, useEffect } from 'react';
-import { CheckCircle2, XCircle, Loader2, Download, RotateCcw, X, Settings2, Maximize2 } from 'lucide-react';
+import { CheckCircle2, XCircle, Loader2, Download, RotateCcw, X, Maximize2 } from 'lucide-react';
 import type { ImageProcessingItem, ImageResizeConfig } from '@/types/batchProcessing';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';

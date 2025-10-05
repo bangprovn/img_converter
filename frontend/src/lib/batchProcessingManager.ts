@@ -130,7 +130,7 @@ export class BatchProcessingManager {
       });
 
       // Progress callback to update item progress
-      const onProgress = (progress: number, stage: string) => {
+      const onProgress = (progress: number) => {
         this.updateItem(id, {
           progress,
         });
@@ -146,7 +146,7 @@ export class BatchProcessingManager {
           item.resizeConfig.height !== item.originalDimensions.height;
 
         if (shouldResize) {
-          onProgress(10, 'Resizing image');
+          onProgress(10);
 
           const resized = await resizeImage(item.file, {
             width: item.resizeConfig.width,
@@ -162,7 +162,7 @@ export class BatchProcessingManager {
             { type: item.file.type }
           );
 
-          onProgress(20, 'Resize complete, starting conversion');
+          onProgress(20);
         }
       }
 
