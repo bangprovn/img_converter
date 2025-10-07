@@ -14,11 +14,13 @@ import { ImagePreview } from './ImagePreview';
 import { DownloadManager } from './DownloadManager';
 import { ComparisonView } from './ComparisonView';
 import { StatisticsDashboard } from './StatisticsDashboard';
+import { GlobalResizeControls } from './GlobalResizeControls';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { downloadConvertedImage } from '@/lib/imageProcessing';
 import { SUPPORTED_FORMATS } from '@/types/image';
+import type { ImageResizeConfig } from '@/types/batchProcessing';
 
 interface BatchProcessingProps {
   targetFormat: ImageFormat;
@@ -89,8 +91,12 @@ export function BatchProcessing({ targetFormat, options = {} }: BatchProcessingP
     manager.cancelItem(id);
   };
 
-  const handleResizeConfigChange = (id: string, config: any) => {
+  const handleResizeConfigChange = (id: string, config: ImageResizeConfig) => {
     manager.updateItemResizeConfig(id, config);
+  };
+
+  const handleGlobalResizeApply = (config: ImageResizeConfig) => {
+    manager.applyResizeConfigToAll(config);
   };
 
   const itemsArray = useMemo(() => Array.from(state.items.values()), [state.items]);
@@ -144,43 +150,50 @@ export function BatchProcessing({ targetFormat, options = {} }: BatchProcessingP
       {/* Control Bar */}
       {state.totalItems > 0 && (
         <Card className="p-4 border-purple-100 dark:border-purple-900 bg-gradient-to-r from-indigo-50/50 to-purple-50/50 dark:from-indigo-950/20 dark:to-purple-950/20">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex-1">
-              <p className="text-sm font-semibold">
-                {state.totalItems} image{state.totalItems !== 1 ? 's' : ''} •{' '}
-                <span className="text-green-600 dark:text-green-400">{state.completedItems} completed</span> •{' '}
-                <span className="text-red-600 dark:text-red-400">{state.failedItems} failed</span>
-              </p>
-              {state.isProcessing && (
-                <div className="mt-2">
-                  <Progress value={state.overallProgress} className="h-2" />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {state.overallProgress}% complete
-                  </p>
-                </div>
-              )}
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex-1">
+                <p className="text-sm font-semibold">
+                  {state.totalItems} image{state.totalItems !== 1 ? 's' : ''} •{' '}
+                  <span className="text-green-600 dark:text-green-400">{state.completedItems} completed</span> •{' '}
+                  <span className="text-red-600 dark:text-red-400">{state.failedItems} failed</span>
+                </p>
+                {state.isProcessing && (
+                  <div className="mt-2">
+                    <Progress value={state.overallProgress} className="h-2" />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {state.overallProgress}% complete
+                    </p>
+                  </div>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleProcessBatch}
+                  disabled={!canProcess}
+                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                  size="sm"
+                >
+                  <Play className="h-4 w-4 mr-2" />
+                  Process All
+                </Button>
+                <Button
+                  onClick={handleClear}
+                  variant="outline"
+                  size="sm"
+                  disabled={state.isProcessing}
+                  className="border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-950"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Clear
+                </Button>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Button
-                onClick={handleProcessBatch}
-                disabled={!canProcess}
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-                size="sm"
-              >
-                <Play className="h-4 w-4 mr-2" />
-                Process All
-              </Button>
-              <Button
-                onClick={handleClear}
-                variant="outline"
-                size="sm"
-                disabled={state.isProcessing}
-                className="border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-950"
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Clear
-              </Button>
-            </div>
+
+            {/* Global Resize Controls */}
+            {!state.isProcessing && canProcess && (
+              <GlobalResizeControls onApply={handleGlobalResizeApply} />
+            )}
           </div>
         </Card>
       )}

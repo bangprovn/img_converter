@@ -215,10 +215,20 @@ export class BatchProcessingManager {
     this.notifyListeners();
 
     const results = new Map<string, ConversionResult>();
-    const itemIds = Array.from(this.items.keys());
+
+    // Filter only queued items (not already processed or failed)
+    const itemsToProcess = Array.from(this.items.entries())
+      .filter(([_, item]) => item.status === 'queued')
+      .map(([id]) => id);
+
+    if (itemsToProcess.length === 0) {
+      this.isProcessing = false;
+      this.notifyListeners();
+      return results;
+    }
 
     // Process items in parallel (worker pool handles concurrency)
-    const processingPromises = itemIds.map(async (id) => {
+    const processingPromises = itemsToProcess.map(async (id) => {
       const result = await this.processItem(id, targetFormat, options);
       if (result) {
         results.set(id, result);
@@ -333,6 +343,44 @@ export class BatchProcessingManager {
     if (item && (item.status === 'queued' || item.status === 'processing')) {
       this.updateItem(id, { resizeConfig: config });
     }
+  }
+
+  /**
+   * Apply resize configuration to all queued items
+   */
+  applyResizeConfigToAll(config: ImageResizeConfig) {
+    const itemsArray = Array.from(this.items.values());
+    const queuedItems = itemsArray.filter(
+      (item) => item.status === 'queued' && item.originalDimensions
+    );
+
+    queuedItems.forEach((item) => {
+      // If maintain aspect ratio is enabled, calculate dimensions based on original image
+      let finalConfig = { ...config };
+
+      if (config.maintainAspectRatio && item.originalDimensions) {
+        const originalAspectRatio = item.originalDimensions.width / item.originalDimensions.height;
+        const targetAspectRatio = config.width / config.height;
+
+        // Adjust dimensions to maintain aspect ratio
+        if (Math.abs(originalAspectRatio - targetAspectRatio) > 0.01) {
+          // Scale to fit within target dimensions while maintaining aspect ratio
+          if (originalAspectRatio > targetAspectRatio) {
+            // Image is wider - constrain by width
+            finalConfig.width = config.width;
+            finalConfig.height = Math.round(config.width / originalAspectRatio);
+          } else {
+            // Image is taller - constrain by height
+            finalConfig.height = config.height;
+            finalConfig.width = Math.round(config.height * originalAspectRatio);
+          }
+        }
+      }
+
+      this.updateItem(item.id, { resizeConfig: finalConfig });
+    });
+
+    this.notifyListeners();
   }
 }
 

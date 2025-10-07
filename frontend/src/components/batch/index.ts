@@ -8,3 +8,4 @@ export { ImagePreview } from './ImagePreview';
 export { DownloadManager } from './DownloadManager';
 export { ComparisonView } from './ComparisonView';
 export { StatisticsDashboard } from './StatisticsDashboard';
+export { GlobalResizeControls } from './GlobalResizeControls';
