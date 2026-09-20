@@ -98,26 +98,48 @@ export function ComparisonView({ originalFile, result }: ComparisonViewProps) {
   }, [isDragging]);
 
   return (
-    <Card className="p-6">
+    <Card className="p-4 sm:p-6">
       <div className="space-y-4">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
             <h3 className="text-lg font-semibold">Image Comparison</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">{originalFile.name}</p>
+            <p className="truncate text-sm text-gray-600 dark:text-gray-400" title={originalFile.name}>
+              {originalFile.name}
+            </p>
           </div>
 
           {/* Zoom Controls */}
           <div className="flex items-center gap-2">
-            <Button size="sm" variant="outline" onClick={handleZoomOut} disabled={zoom <= 25}>
-              <ZoomOut className="h-4 w-4" />
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-11 w-11 sm:h-8 sm:w-8"
+              onClick={handleZoomOut}
+              disabled={zoom <= 25}
+              aria-label="Zoom out"
+            >
+              <ZoomOut className="h-4 w-4" aria-hidden="true" />
             </Button>
-            <span className="text-sm font-medium w-12 text-center">{zoom}%</span>
-            <Button size="sm" variant="outline" onClick={handleZoomIn} disabled={zoom >= 400}>
-              <ZoomIn className="h-4 w-4" />
+            <span className="w-12 text-center text-sm font-medium">{zoom}%</span>
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-11 w-11 sm:h-8 sm:w-8"
+              onClick={handleZoomIn}
+              disabled={zoom >= 400}
+              aria-label="Zoom in"
+            >
+              <ZoomIn className="h-4 w-4" aria-hidden="true" />
             </Button>
-            <Button size="sm" variant="outline" onClick={handleResetZoom}>
-              <RotateCw className="h-4 w-4" />
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-11 w-11 sm:h-8 sm:w-8"
+              onClick={handleResetZoom}
+              aria-label="Reset zoom"
+            >
+              <RotateCw className="h-4 w-4" aria-hidden="true" />
             </Button>
           </div>
         </div>
@@ -151,7 +173,7 @@ export function ComparisonView({ originalFile, result }: ComparisonViewProps) {
           <TabsContent value="side-by-side" className="mt-4">
             <div
               ref={containerRef}
-              className="grid grid-cols-2 gap-4 overflow-auto max-h-[500px] p-4 bg-gray-100 dark:bg-gray-900 rounded-lg"
+              className="grid max-h-[60vh] grid-cols-2 gap-3 overflow-auto rounded-lg bg-gray-100 p-3 dark:bg-gray-900 sm:max-h-[500px] sm:gap-4 sm:p-4"
             >
               <div className="space-y-2">
                 <p className="text-sm font-medium text-center">Original</p>
@@ -182,8 +204,7 @@ export function ComparisonView({ originalFile, result }: ComparisonViewProps) {
           <TabsContent value="slider" className="mt-4">
             <div
               ref={sliderContainerRef}
-              className="relative overflow-hidden bg-gray-100 dark:bg-gray-900 rounded-lg cursor-ew-resize select-none"
-              style={{ height: '500px' }}
+              className="relative h-[320px] cursor-ew-resize select-none overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-900 sm:h-[500px]"
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}

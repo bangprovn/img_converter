@@ -37,7 +37,8 @@ export default defineConfig({
       'gifsicle-wasm-browser',
       '@ffmpeg/ffmpeg',
       '@ffmpeg/util',
-      '@huggingface/transformers'
+      '@huggingface/transformers',
+      'onnxruntime-web',
     ],
   },
   build: {
@@ -80,7 +81,6 @@ export default defineConfig({
           // Image processing vendors (lazy loaded separately)
           'jszip-vendor': ['jszip'],
           'dropzone-vendor': ['react-dropzone'],
-          'transformers': ['@huggingface/transformers'],
         },
         // Optimize asset file names for caching
         assetFileNames: (assetInfo) => {

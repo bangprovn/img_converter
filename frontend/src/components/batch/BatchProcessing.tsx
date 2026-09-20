@@ -116,7 +116,7 @@ export function BatchProcessing({ targetFormat, options = {} }: BatchProcessingP
       {!state.isProcessing && state.totalItems === 0 && (
         <Card
           {...getRootProps()}
-          className={`p-12 border-2 border-dashed cursor-pointer transition-all duration-300 ${
+          className={`p-8 sm:p-12 border-2 border-dashed cursor-pointer transition-all duration-300 ${
             isDragActive
               ? 'border-indigo-500 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-950/30 dark:via-purple-950/20 dark:to-pink-950/30 scale-[1.02]'
               : 'border-indigo-200 dark:border-indigo-800 hover:border-indigo-400 dark:hover:border-indigo-600 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 dark:from-blue-950/20 dark:to-indigo-950/20'
@@ -151,8 +151,8 @@ export function BatchProcessing({ targetFormat, options = {} }: BatchProcessingP
       {state.totalItems > 0 && (
         <Card className="p-4 border-purple-100 dark:border-purple-900 bg-gradient-to-r from-indigo-50/50 to-purple-50/50 dark:from-indigo-950/20 dark:to-purple-950/20">
           <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex-1">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+              <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold">
                   {state.totalItems} image{state.totalItems !== 1 ? 's' : ''} •{' '}
                   <span className="text-green-600 dark:text-green-400">{state.completedItems} completed</span> •{' '}
@@ -167,11 +167,11 @@ export function BatchProcessing({ targetFormat, options = {} }: BatchProcessingP
                   </div>
                 )}
               </div>
-              <div className="flex gap-2">
+              <div className="flex w-full gap-2 sm:w-auto">
                 <Button
                   onClick={handleProcessBatch}
                   disabled={!canProcess}
-                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                  className="h-11 flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 sm:h-8 sm:flex-none"
                   size="sm"
                 >
                   <Play className="h-4 w-4 mr-2" />
@@ -182,7 +182,7 @@ export function BatchProcessing({ targetFormat, options = {} }: BatchProcessingP
                   variant="outline"
                   size="sm"
                   disabled={state.isProcessing}
-                  className="border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-950"
+                  className="h-11 flex-1 border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-950 sm:h-8 sm:flex-none"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
                   Clear
@@ -242,7 +242,7 @@ export function BatchProcessing({ targetFormat, options = {} }: BatchProcessingP
           className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
           onClick={() => setSelectedItemForComparison(null)}
         >
-          <div className="max-w-6xl w-full" onClick={(e) => e.stopPropagation()}>
+          <div className="max-h-[90dvh] w-full max-w-6xl overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <ComparisonView
               originalFile={selectedItemForComparison.file}
               result={selectedItemForComparison.result}

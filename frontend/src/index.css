@@ -62,7 +62,46 @@
     @apply border-border;
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground min-h-screen font-sans antialiased;
+    /* Prevent accidental horizontal scrolling on narrow phones (320-430px). */
+    overflow-x: clip;
+    overflow-wrap: anywhere;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #root {
+    @apply flex min-h-screen flex-col;
+  }
+
+  /* Consistent, visible keyboard focus across the app. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Honour reduced-motion preferences for the whole app. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Native form controls should never be smaller than a comfortable tap. */
+  input[type='range'] {
+    touch-action: none;
   }
 }

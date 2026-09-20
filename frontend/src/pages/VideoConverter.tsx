@@ -32,31 +32,31 @@ export function VideoConverter() {
         <TabsList className="grid w-full grid-cols-4 sm:grid-cols-7 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 p-1 h-auto">
           <TabsTrigger value="trim" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white text-xs sm:text-sm py-2">
             <Scissors className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Trim</span>
+            <span className="sr-only sm:not-sr-only sm:inline">Trim</span>
           </TabsTrigger>
           <TabsTrigger value="compress" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white text-xs sm:text-sm py-2">
             <Zap className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Compress</span>
+            <span className="sr-only sm:not-sr-only sm:inline">Compress</span>
           </TabsTrigger>
           <TabsTrigger value="audio" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white text-xs sm:text-sm py-2">
             <Music className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Audio</span>
+            <span className="sr-only sm:not-sr-only sm:inline">Audio</span>
           </TabsTrigger>
           <TabsTrigger value="merge" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white text-xs sm:text-sm py-2">
             <Combine className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Merge</span>
+            <span className="sr-only sm:not-sr-only sm:inline">Merge</span>
           </TabsTrigger>
           <TabsTrigger value="resize" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white text-xs sm:text-sm py-2 col-span-1 sm:col-span-1">
             <Maximize2 className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Resize</span>
+            <span className="sr-only sm:not-sr-only sm:inline">Resize</span>
           </TabsTrigger>
           <TabsTrigger value="convert" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white text-xs sm:text-sm py-2 col-span-2 sm:col-span-1">
             <FileVideo className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Convert</span>
+            <span className="sr-only sm:not-sr-only sm:inline">Convert</span>
           </TabsTrigger>
           <TabsTrigger value="to-gif" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white text-xs sm:text-sm py-2 col-span-2 sm:col-span-1">
             <Film className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden sm:inline">To GIF</span>
+            <span className="sr-only sm:not-sr-only sm:inline">To GIF</span>
           </TabsTrigger>
         </TabsList>
 

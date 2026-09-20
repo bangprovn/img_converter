@@ -30,23 +30,23 @@ export function GIFConverter() {
         <TabsList className="grid w-full grid-cols-3 sm:grid-cols-5 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-950 dark:to-purple-950 p-1 h-auto">
           <TabsTrigger value="compress" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-600 data-[state=active]:to-purple-600 data-[state=active]:text-white text-xs sm:text-sm py-2">
             <Zap className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Compress</span>
+            <span className="sr-only sm:not-sr-only sm:inline">Compress</span>
           </TabsTrigger>
           <TabsTrigger value="to-video" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-600 data-[state=active]:to-purple-600 data-[state=active]:text-white text-xs sm:text-sm py-2">
             <FileVideo className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden sm:inline">To Video</span>
+            <span className="sr-only sm:not-sr-only sm:inline">To Video</span>
           </TabsTrigger>
           <TabsTrigger value="to-frames" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-600 data-[state=active]:to-purple-600 data-[state=active]:text-white text-xs sm:text-sm py-2">
             <Image className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden sm:inline">To Frames</span>
+            <span className="sr-only sm:not-sr-only sm:inline">To Frames</span>
           </TabsTrigger>
           <TabsTrigger value="to-spritesheet" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-600 data-[state=active]:to-purple-600 data-[state=active]:text-white text-xs sm:text-sm py-2 col-span-2 sm:col-span-1">
             <Grid3x3 className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Spritesheet</span>
+            <span className="sr-only sm:not-sr-only sm:inline">Spritesheet</span>
           </TabsTrigger>
           <TabsTrigger value="optimize" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-600 data-[state=active]:to-purple-600 data-[state=active]:text-white text-xs sm:text-sm py-2 col-span-1 sm:col-span-1">
             <Settings2 className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Optimize</span>
+            <span className="sr-only sm:not-sr-only sm:inline">Optimize</span>
           </TabsTrigger>
         </TabsList>
 

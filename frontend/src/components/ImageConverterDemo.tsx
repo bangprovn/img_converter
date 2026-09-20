@@ -60,7 +60,7 @@ export function ImageConverterDemo() {
             onClick={() => setShowAdvancedSettings(!showAdvancedSettings)}
             variant="outline"
             size="sm"
-            className="border-indigo-200 dark:border-indigo-800 hover:bg-indigo-50 dark:hover:bg-indigo-950 flex-1 sm:flex-none"
+            className="h-11 flex-1 border-indigo-200 dark:border-indigo-800 hover:bg-indigo-50 dark:hover:bg-indigo-950 sm:h-8 sm:flex-none"
           >
             {showAdvancedSettings ? (
               <ChevronUp className="h-4 w-4 sm:mr-2" />
@@ -74,7 +74,7 @@ export function ImageConverterDemo() {
             onClick={resetSettings}
             variant="outline"
             size="sm"
-            className="border-purple-200 dark:border-purple-800 hover:bg-purple-50 dark:hover:bg-purple-950"
+            className="h-11 border-purple-200 dark:border-purple-800 hover:bg-purple-50 dark:hover:bg-purple-950 sm:h-8"
           >
             <RotateCcw className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">Reset</span>
@@ -83,7 +83,7 @@ export function ImageConverterDemo() {
             onClick={exportSettings}
             variant="outline"
             size="sm"
-            className="border-pink-200 dark:border-pink-800 hover:bg-pink-50 dark:hover:bg-pink-950"
+            className="h-11 border-pink-200 dark:border-pink-800 hover:bg-pink-50 dark:hover:bg-pink-950 sm:h-8"
           >
             <Download className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">Export</span>
@@ -92,7 +92,7 @@ export function ImageConverterDemo() {
             variant="outline"
             size="sm"
             asChild
-            className="border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-950"
+            className="h-11 border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-950 sm:h-8"
           >
             <label className="cursor-pointer">
               <Upload className="h-4 w-4 sm:mr-2" />

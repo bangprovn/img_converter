@@ -56,7 +56,7 @@ export function ConversionOptions({
 
   return (
     <Card className="border-indigo-100 dark:border-indigo-900">
-      <CardHeader>
+      <CardHeader className="p-4 sm:p-6">
         <div className="flex items-center gap-2">
           <div className="p-2 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500">
             <Settings2 className="h-5 w-5 text-white" />
@@ -69,7 +69,7 @@ export function ConversionOptions({
           Configure compression and quality settings for image conversion
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-5 p-4 pt-0 sm:space-y-6 sm:p-6 sm:pt-0">
         {/* Format Selector */}
         <div className="space-y-2">
           <Label htmlFor="target-format">Target Format</Label>
@@ -87,8 +87,8 @@ export function ConversionOptions({
         </div>
 
         {/* Settings Mode Toggle */}
-        <div className="flex items-center justify-between rounded-lg border border-purple-200 dark:border-purple-800 p-4 bg-gradient-to-r from-purple-50/50 to-pink-50/50 dark:from-purple-950/20 dark:to-pink-950/20">
-          <div className="space-y-0.5">
+        <div className="flex items-center justify-between gap-3 rounded-lg border border-purple-200 bg-gradient-to-r from-purple-50/50 to-pink-50/50 p-3 dark:border-purple-800 dark:from-purple-950/20 dark:to-pink-950/20 sm:p-4">
+          <div className="min-w-0 space-y-0.5">
             <Label htmlFor="settings-mode" className="font-semibold">Apply to All Images</Label>
             <p className="text-sm text-muted-foreground">
               {settingsMode === 'global'
