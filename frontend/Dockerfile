@@ -32,6 +32,9 @@ RUN corepack enable && corepack prepare pnpm@9.15.9 --activate
 # Copy package files
 COPY package.json pnpm-lock.yaml* ./
 
+# onnxruntime-node would download a ~300 MB CUDA build; only the web runtime is used
+ENV ONNXRUNTIME_NODE_INSTALL_CUDA=skip
+
 # Install all dependencies
 RUN pnpm install --frozen-lockfile
 
